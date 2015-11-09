@@ -66,6 +66,11 @@ function(yotta_apply_target_rules target_type target_name)
             # and append the softdevice hex file
             COMMAND python ${NRF51822_MERGE_HEX_SCRIPT} ${NRF51822_SOFTDEVICE_HEX_FILE} ${target_name}.hex ${target_name}-combined.hex
             COMMENT "hexifying and adding softdevice to ${target_name}"
+            COMMAND "${ARM_NONE_EABI_OBJCOPY}" -O binary ${target_name} ${target_name}.bin
+            COMMENT "converting to .bin"
+            # generate dfu .dat from bin
+            COMMAND python ${NRF51822_GEN_DAT_SCRIPT} ${target_name}.bin
+            COMMENT "generating .dat"
             VERBATIM
         )
     endif()
